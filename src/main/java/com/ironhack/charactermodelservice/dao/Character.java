@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -36,7 +37,7 @@ public class Character {
     private Boolean isAlive;
 
     @Column(name = "death_time")
-    private LocalDateTime deathTime;
+    private Instant deathTime;
 
     @Column(name = "name")
     private String name;
@@ -88,7 +89,7 @@ public class Character {
     public Character(String userUsername,
                      Type type,
                      Boolean isAlive,
-                     LocalDateTime deathTime,
+                     Instant deathTime,
                      String name,
                      String pictureURL,
                      Integer level,
