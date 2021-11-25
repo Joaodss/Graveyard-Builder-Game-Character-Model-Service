@@ -1,14 +1,15 @@
 package com.ironhack.charactermodelservice.dao;
 
+import com.ironhack.charactermodelservice.dto.NewCharacterDTO;
 import com.ironhack.charactermodelservice.enums.Type;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
+import static com.ironhack.charactermodelservice.util.TypeEnumConverter.convertStringToType;
 import static com.ironhack.charactermodelservice.util.constants.CharacterStatsConstants.*;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -175,6 +176,45 @@ public class Character {
         }
         log.info("New Character created -> {}", this);
     }
+
+    public Character(NewCharacterDTO newCharacterDTO) {
+        this.userUsername = newCharacterDTO.getUserUsername();
+        this.type = convertStringToType(newCharacterDTO.getType());
+        this.isAlive = true;
+        this.deathTime = null;
+        this.name = newCharacterDTO.getName();
+        this.pictureURL = newCharacterDTO.getPictureURL() == null ?
+                newCharacterDTO.getPictureURL() :
+                DEFAULT_PICTURE_URL;
+        this.level = BASE_LEVEL;
+        this.experience = BASE_EXPERIENCE;
+        this.passiveChance = BASE_PASSIVE_CHANCE;
+        switch (type) {
+            case WARRIOR -> {
+                this.maxHealth = BASE_WARRIOR_HEALTH;
+                this.currentHealth = BASE_WARRIOR_HEALTH;
+                this.maxStamina = BASE_WARRIOR_STAMINA;
+                this.currentStamina = BASE_WARRIOR_STAMINA;
+                this.strength = BASE_WARRIOR_STRENGTH;
+            }
+            case ARCHER -> {
+                this.maxHealth = BASE_ARCHER_HEALTH;
+                this.currentHealth = BASE_ARCHER_HEALTH;
+                this.maxStamina = BASE_ARCHER_STAMINA;
+                this.currentStamina = BASE_ARCHER_STAMINA;
+                this.accuracy = BASE_ARCHER_ACCURACY;
+            }
+            case MAGE -> {
+                this.maxHealth = BASE_MAGE_HEALTH;
+                this.currentHealth = BASE_MAGE_HEALTH;
+                this.maxMana = BASE_MAGE_MANA;
+                this.currentMana = BASE_MAGE_MANA;
+                this.intelligence = BASE_MAGE_INTELLIGENCE;
+            }
+        }
+        log.info("New Character created -> {}", this);
+    }
+
 
     // -------------------- Equals and HashCode --------------------
     @Override
