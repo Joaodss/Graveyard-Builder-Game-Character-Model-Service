@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface CharacterRepository extends JpaRepository<Character, Long> {
 
-    List<Character> findByUserUsernameAndIsAlive(String userUsername, Boolean isAlive);
+    List<Character> findAllByUserUsernameAndIsAlive(String userUsername, Boolean isAlive);
 
 }

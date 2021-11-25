@@ -140,7 +140,7 @@ class CharacterRepositoryTest {
     @Test
     @Order(6)
     void testFindByUserUsernameAndIsAlive_validUserUsername_alive_returnsListOfObjectsNotEmpty() {
-        var storedElements = characterRepository.findByUserUsernameAndIsAlive("joaodss", true);
+        var storedElements = characterRepository.findAllByUserUsernameAndIsAlive("joaodss", true);
         assertFalse(storedElements.contains(character2));
         assertTrue(storedElements.contains(character3));
     }
@@ -148,14 +148,14 @@ class CharacterRepositoryTest {
     @Test
     @Order(6)
     void testFindByUserUsernameAndIsAlive_validUserUsername_graveyard_returnsListOfObjectsNotEmpty() {
-        var storedElements = characterRepository.findByUserUsernameAndIsAlive("joaodss", false);
+        var storedElements = characterRepository.findAllByUserUsernameAndIsAlive("joaodss", false);
         assertTrue(storedElements.contains(character2));
         assertFalse(storedElements.contains(character3));
     }
 
    @Test @Order(6)
     void testFindByUserUsernameAndIsAlive_invalidUserUsername_returnsEmptyList() {
-        var storedElements = characterRepository.findByUserUsernameAndIsAlive("invalidUsername", true);
+        var storedElements = characterRepository.findAllByUserUsernameAndIsAlive("invalidUsername", true);
         assertTrue(storedElements.isEmpty());
     }
 

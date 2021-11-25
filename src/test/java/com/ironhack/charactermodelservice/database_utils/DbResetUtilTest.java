@@ -60,7 +60,7 @@ class DbResetUtilTest {
         roleRepository.save(newCharacter1);
 
         // Read saved role
-        var storedCharacter = roleRepository.findByUserUsernameAndIsAlive("user1", true).stream()
+        var storedCharacter = roleRepository.findAllByUserUsernameAndIsAlive("user1", true).stream()
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Character not found"));
         assertEquals(1, storedCharacter.getId());
@@ -75,7 +75,7 @@ class DbResetUtilTest {
 
 
         // Read second saved role
-        storedCharacter = roleRepository.findByUserUsernameAndIsAlive("user2", true).stream()
+        storedCharacter = roleRepository.findAllByUserUsernameAndIsAlive("user2", true).stream()
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Character not found"));
         assertEquals(Optional.empty(), roleRepository.findById(1L));
@@ -93,7 +93,7 @@ class DbResetUtilTest {
         roleRepository.save(newCharacter1);
 
         // Read saved role
-        var storedCharacter = roleRepository.findByUserUsernameAndIsAlive("user1", true).stream()
+        var storedCharacter = roleRepository.findAllByUserUsernameAndIsAlive("user1", true).stream()
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Character not found"));
         assertEquals(1, storedCharacter.getId());
@@ -109,7 +109,7 @@ class DbResetUtilTest {
 
 
         // Read second saved role
-        storedCharacter = roleRepository.findByUserUsernameAndIsAlive("user2", true).stream()
+        storedCharacter = roleRepository.findAllByUserUsernameAndIsAlive("user2", true).stream()
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Character not found"));
         assertEquals(Optional.of(storedCharacter), roleRepository.findById(1L));
