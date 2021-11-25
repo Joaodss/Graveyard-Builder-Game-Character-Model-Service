@@ -12,7 +12,7 @@ import static com.ironhack.charactermodelservice.util.constants.CharacterStatsCo
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table
+@Table(name = "characters")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

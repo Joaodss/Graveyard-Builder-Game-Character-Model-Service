@@ -1,7 +1,7 @@
 package com.ironhack.charactermodelservice.database_utils;
 
-import com.ironhack.usermodelservice.dao.Role;
-import com.ironhack.usermodelservice.repository.RoleRepository;
+import com.ironhack.charactermodelservice.dao.Character;
+import com.ironhack.charactermodelservice.repository.CharacterRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -13,7 +13,10 @@ import org.springframework.test.context.ActiveProfiles;
 import java.sql.SQLException;
 import java.util.Optional;
 
-import static com.ironhack.usermodelservice.database_utils.DbResetUtil.resetAutoIncrementColumns;
+import static com.ironhack.charactermodelservice.database_utils.DbResetUtil.resetAutoIncrementColumns;
+import static com.ironhack.charactermodelservice.enums.Type.ARCHER;
+import static com.ironhack.charactermodelservice.enums.Type.WARRIOR;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -21,8 +24,20 @@ import static com.ironhack.usermodelservice.database_utils.DbResetUtil.resetAuto
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class DbResetUtilTest {
     private final ApplicationContext applicationContext;
-    private final RoleRepository roleRepository;
+    private final CharacterRepository roleRepository;
 
+    private final Character newCharacter1 = new Character(
+            "user1",
+            WARRIOR,
+            "SwordGuy",
+            ""
+    );
+    private final Character newCharacter2 = new Character(
+            "user2",
+            ARCHER,
+            "ArcherGirl",
+            ""
+    );
 
     @BeforeEach
     void setUp() {
@@ -31,7 +46,7 @@ class DbResetUtilTest {
     @AfterEach
     void tearDown() throws SQLException {
         roleRepository.deleteAll();
-        resetAutoIncrementColumns(applicationContext, "roles");
+        resetAutoIncrementColumns(applicationContext, "characters");
     }
 
 
@@ -42,28 +57,30 @@ class DbResetUtilTest {
         assertEquals(0, roleRepository.count());
 
         // Create first role
-        roleRepository.save(new Role("ROLE"));
+        roleRepository.save(newCharacter1);
 
         // Read saved role
-        var storedRole = roleRepository.findByName("ROLE")
-                .orElseThrow(() -> new RuntimeException("Role not found"));
-        assertEquals(1, storedRole.getId());
-        assertEquals("ROLE", storedRole.getName());
+        var storedCharacter = roleRepository.findByUserUsernameAndIsAlive("user1", true).stream()
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Character not found"));
+        assertEquals(1, storedCharacter.getId());
+        assertEquals("SwordGuy", storedCharacter.getName());
 
         // DeleteAll
         roleRepository.deleteAll();
         assertEquals(0, roleRepository.count());
 
         // Create Second
-        roleRepository.save(new Role("NEW_ROLE"));
+        roleRepository.save(newCharacter2);
 
 
         // Read second saved role
-        storedRole = roleRepository.findByName("NEW_ROLE")
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+        storedCharacter = roleRepository.findByUserUsernameAndIsAlive("user2", true).stream()
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Character not found"));
         assertEquals(Optional.empty(), roleRepository.findById(1L));
-        assertEquals(2, storedRole.getId());
-        assertEquals("NEW_ROLE", storedRole.getName());
+        assertEquals(2, storedCharacter.getId());
+        assertEquals("ArcherGirl", storedCharacter.getName());
     }
 
     @Test
@@ -73,29 +90,31 @@ class DbResetUtilTest {
         assertEquals(0, roleRepository.count());
 
         // Create first role
-        roleRepository.save(new Role("ROLE"));
+        roleRepository.save(newCharacter1);
 
         // Read saved role
-        var storedRole = roleRepository.findByName("ROLE")
-                .orElseThrow(() -> new RuntimeException("Role not found"));
-        assertEquals(1, storedRole.getId());
-        assertEquals("ROLE", storedRole.getName());
+        var storedCharacter = roleRepository.findByUserUsernameAndIsAlive("user1", true).stream()
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Character not found"));
+        assertEquals(1, storedCharacter.getId());
+        assertEquals("SwordGuy", storedCharacter.getName());
 
         // DeleteAll
         roleRepository.deleteAll();
-        resetAutoIncrementColumns(applicationContext, "roles");
+        resetAutoIncrementColumns(applicationContext, "characters");
         assertEquals(0, roleRepository.count());
 
         // Create Second
-        roleRepository.save(new Role("NEW_ROLE"));
+        roleRepository.save(newCharacter2);
 
 
         // Read second saved role
-        storedRole = roleRepository.findByName("NEW_ROLE")
-                .orElseThrow(() -> new RuntimeException("Role not found"));
-        assertEquals(Optional.of(storedRole), roleRepository.findById(1L));
-        assertEquals(1, storedRole.getId());
-        assertEquals("NEW_ROLE", storedRole.getName());
+        storedCharacter = roleRepository.findByUserUsernameAndIsAlive("user2", true).stream()
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Character not found"));
+        assertEquals(Optional.of(storedCharacter), roleRepository.findById(1L));
+        assertEquals(1, storedCharacter.getId());
+        assertEquals("ArcherGirl", storedCharacter.getName());
     }
 
 }
