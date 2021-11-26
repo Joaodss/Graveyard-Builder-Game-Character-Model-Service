@@ -34,6 +34,8 @@ class CharacterServiceTest {
     private Character character4;
     private CharacterDTO newUpdatedCharacter1;
     private Character updatedCharacter1;
+    private CharacterDTO newUpdatedCharacter2;
+    private Character updatedCharacter2;
 
     @BeforeEach
     void setUp() {
@@ -114,6 +116,11 @@ class CharacterServiceTest {
                 character1.getCurrentMana(),
                 character1.getIntelligence()
         );
+        newUpdatedCharacter2 = new CharacterDTO();
+        newUpdatedCharacter2.setId(1L);
+        newUpdatedCharacter2.setPictureURL("Hello.png");
+        updatedCharacter2 = character1;
+        updatedCharacter2.setPictureURL("Hello.png");
     }
 
     @AfterEach
@@ -296,6 +303,20 @@ class CharacterServiceTest {
         var result = characterService.updateCharacter(newUpdatedCharacter1);
         // Then
         assertEquals(new CharacterDTO(updatedCharacter1), result);
+    }
+
+    @Test
+    @Order(6)
+    void testUpdateCharacter_updatePictureUrl_validCharacter_returnsCharacter() {
+        // Given
+        when(characterRepository.findById(anyLong()))
+                .thenReturn(Optional.of(character2));
+        when(characterRepository.save(any(Character.class)))
+                .thenReturn(updatedCharacter2);
+        // When
+        var result = characterService.updateCharacter(newUpdatedCharacter2);
+        // Then
+        assertEquals(new CharacterDTO(updatedCharacter2), result);
     }
 
     @Test
