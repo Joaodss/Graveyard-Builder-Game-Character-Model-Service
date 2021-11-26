@@ -76,9 +76,9 @@ public class CharacterControllerImpl implements CharacterController {
         }
     }
 
-    @PutMapping("/update/levelup")
+    @PutMapping("/update/levelUp")
     @ResponseStatus(OK)
-    public CharacterDTO levelUpCharacter(LevelUpDTO levelUpDTO) {
+    public CharacterDTO levelUpCharacter(@RequestBody LevelUpDTO levelUpDTO) {
         log.info("Leveling up character {}", levelUpDTO.getId());
         try {
             return characterService.levelUpCharacter(levelUpDTO);
