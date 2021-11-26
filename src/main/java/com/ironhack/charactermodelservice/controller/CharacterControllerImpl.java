@@ -1,6 +1,7 @@
 package com.ironhack.charactermodelservice.controller;
 
 import com.ironhack.charactermodelservice.dto.CharacterDTO;
+import com.ironhack.charactermodelservice.dto.LevelUpDTO;
 import com.ironhack.charactermodelservice.dto.NewCharacterDTO;
 import com.ironhack.charactermodelservice.service.CharacterService;
 import lombok.RequiredArgsConstructor;
@@ -70,6 +71,17 @@ public class CharacterControllerImpl implements CharacterController {
         log.info("Updating character {}", updateCharacterDTO.getId());
         try {
             return characterService.updateCharacter(updateCharacterDTO);
+        } catch (EntityNotFoundException e1) {
+            throw new ResponseStatusException(BAD_REQUEST, "Character not found");
+        }
+    }
+
+    @PutMapping("/update/levelup")
+    @ResponseStatus(OK)
+    public CharacterDTO levelUpCharacter(LevelUpDTO levelUpDTO) {
+        log.info("Leveling up character {}", levelUpDTO.getId());
+        try {
+            return characterService.levelUpCharacter(levelUpDTO);
         } catch (EntityNotFoundException e1) {
             throw new ResponseStatusException(BAD_REQUEST, "Character not found");
         }
