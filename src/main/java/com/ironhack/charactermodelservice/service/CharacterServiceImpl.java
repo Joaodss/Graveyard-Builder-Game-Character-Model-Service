@@ -2,6 +2,7 @@ package com.ironhack.charactermodelservice.service;
 
 import com.ironhack.charactermodelservice.dao.Character;
 import com.ironhack.charactermodelservice.dto.CharacterDTO;
+import com.ironhack.charactermodelservice.dto.LevelUpDTO;
 import com.ironhack.charactermodelservice.dto.NewCharacterDTO;
 import com.ironhack.charactermodelservice.repository.CharacterRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.ironhack.charactermodelservice.util.InstantConverter.convertStringToInstant;
+import static com.ironhack.charactermodelservice.util.constants.CharacterStatsConstants.*;
 
 @Service
 @RequiredArgsConstructor
@@ -111,6 +113,39 @@ public class CharacterServiceImpl implements CharacterService {
         return new CharacterDTO(characterRepository.save(storedCharacter));
     }
 
+    public CharacterDTO levelUpCharacter(LevelUpDTO levelUpDTO) {
+        log.info("Leveling up character with id: {}", levelUpDTO.getId());
+
+        var storedCharacter = characterRepository.findById(levelUpDTO.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Character not found"));
+
+        storedCharacter.setLevel(storedCharacter.getLevel() + 1);
+        storedCharacter.setExperience(0L);
+
+        switch (storedCharacter.getType()) {
+            case WARRIOR -> {
+                storedCharacter.setMaxHealth(storedCharacter.getMaxHealth() + INCREASE_VALUE_WARRIOR_HEALTH);
+                storedCharacter.setMaxStamina(storedCharacter.getMaxStamina() + INCREASE_VALUE_WARRIOR_STAMINA);
+                storedCharacter.setStrength(storedCharacter.getStrength() + INCREASE_VALUE_WARRIOR_STRENGTH);
+            }
+            case ARCHER -> {
+                storedCharacter.setMaxHealth(storedCharacter.getMaxHealth() + INCREASE_VALUE_ARCHER_HEALTH);
+                storedCharacter.setMaxStamina(storedCharacter.getMaxStamina() + INCREASE_VALUE_ARCHER_STAMINA);
+                storedCharacter.setAccuracy(storedCharacter.getAccuracy() + INCREASE_VALUE_ARCHER_ACCURACY);
+            }
+            case MAGE -> {
+                storedCharacter.setMaxHealth(storedCharacter.getMaxHealth() + INCREASE_VALUE_MAGE_HEALTH);
+                storedCharacter.setMaxMana(storedCharacter.getMaxMana() + INCREASE_VALUE_MAGE_MANA);
+                storedCharacter.setIntelligence(storedCharacter.getIntelligence() + INCREASE_VALUE_MAGE_INTELLIGENCE);
+            }
+        }
+        storedCharacter.setCurrentHealth(storedCharacter.getMaxHealth());
+        storedCharacter.setCurrentStamina(storedCharacter.getMaxStamina());
+        storedCharacter.setCurrentMana(storedCharacter.getMaxMana());
+
+        log.info("Character leveled up");
+        return new CharacterDTO(characterRepository.save(storedCharacter));
+    }
 
     // -------------------- Delete methods --------------------
     public void deleteCharacter(Long id) {
