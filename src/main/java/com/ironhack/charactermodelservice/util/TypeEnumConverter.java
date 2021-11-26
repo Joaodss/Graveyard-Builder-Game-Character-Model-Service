@@ -11,7 +11,7 @@ import static lombok.AccessLevel.PRIVATE;
 public class TypeEnumConverter {
 
     public static Type convertStringToType(String stringValue) {
-        log.info("Converting string to type");
+        log.info("Converting string {} to type", stringValue);
         for (Type type : Type.values()) {
             if (type.name().equalsIgnoreCase(stringValue))
                 return type;
