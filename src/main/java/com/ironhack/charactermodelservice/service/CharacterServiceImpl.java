@@ -1,15 +1,18 @@
 package com.ironhack.charactermodelservice.service;
 
+import com.ironhack.charactermodelservice.dao.Character;
 import com.ironhack.charactermodelservice.dto.CharacterDTO;
 import com.ironhack.charactermodelservice.dto.NewCharacterDTO;
-import com.ironhack.charactermodelservice.dto.UpdateCharacterDTO;
 import com.ironhack.charactermodelservice.repository.CharacterRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.ironhack.charactermodelservice.util.InstantConverter.convertStringToInstant;
 
 @Service
 @RequiredArgsConstructor
@@ -17,38 +20,105 @@ import java.util.Optional;
 public class CharacterServiceImpl implements CharacterService {
     private final CharacterRepository characterRepository;
 
+
+    // -------------------- Get methods --------------------
     public List<CharacterDTO> getAllCharacters() {
-        return null;
+        log.info("Getting all characters");
+        var storedCharacters = characterRepository.findAll();
+        return storedCharacters.stream().
+                map(CharacterDTO::new).
+                collect(Collectors.toList());
     }
 
-    @Override
-    public Optional<CharacterDTO> getCharacterById(Long id) {
-        return Optional.empty();
+    public CharacterDTO getCharacterById(Long id) {
+        log.info("Getting character with id: {}", id);
+        var storedCharacter = characterRepository.findById(id);
+        return storedCharacter
+                .map(CharacterDTO::new)
+                .orElse(null);
     }
 
-    @Override
     public List<CharacterDTO> getAliveCharactersByUserUsername(String username) {
-        return null;
+        log.info("Getting all alive characters by user with username: {}", username);
+        var storedCharacters = characterRepository.findAllByUserUsernameAndIsAlive(username, true);
+        return storedCharacters.stream().
+                map(CharacterDTO::new).
+                collect(Collectors.toList());
     }
 
-    @Override
     public List<CharacterDTO> getDeadCharactersByUserUsername(String username) {
-        return null;
+        log.info("Getting all dead characters by user with username: {}", username);
+        var storedCharacters = characterRepository.findAllByUserUsernameAndIsAlive(username, false);
+        return storedCharacters.stream().
+                map(CharacterDTO::new).
+                collect(Collectors.toList());
     }
 
-    @Override
-    public Optional<CharacterDTO> createCharacter(NewCharacterDTO newCharacterDTO) {
-        return Optional.empty();
+
+    // -------------------- Create methods --------------------
+    public CharacterDTO createCharacter(NewCharacterDTO newCharacterDTO) {
+        log.info("Creating character with name: {}", newCharacterDTO.getName());
+        var savedCharacter = characterRepository.save(new Character(newCharacterDTO));
+        log.info("Character saved with id: {}", savedCharacter.getId());
+        return new CharacterDTO(savedCharacter);
     }
 
-    @Override
-    public Optional<CharacterDTO> updateCharacter(UpdateCharacterDTO updateCharacterDTO) {
-        return Optional.empty();
+
+    // -------------------- Update methods --------------------
+    public CharacterDTO updateCharacter(CharacterDTO updateCharacterDTO) {
+        log.info("Updating character with id: {}", updateCharacterDTO.getId());
+
+        var storedCharacter = characterRepository.findById(updateCharacterDTO.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Character not found"));
+
+        if (updateCharacterDTO.getIsAlive() != null)
+            storedCharacter.setIsAlive(updateCharacterDTO.getIsAlive());
+        if (updateCharacterDTO.getDeathTime() != null)
+            storedCharacter.setDeathTime(convertStringToInstant(updateCharacterDTO.getDeathTime()));
+        if (updateCharacterDTO.getName() != null)
+            storedCharacter.setName(updateCharacterDTO.getName());
+        if (updateCharacterDTO.getPictureURL() != null)
+            storedCharacter.setPictureURL(updateCharacterDTO.getPictureURL());
+        if (updateCharacterDTO.getLevel() != null)
+            storedCharacter.setLevel(updateCharacterDTO.getLevel());
+        if (updateCharacterDTO.getExperience() != null)
+            storedCharacter.setExperience(updateCharacterDTO.getExperience());
+        // -------------------- Stats --------------------
+        if (updateCharacterDTO.getMaxHealth() != null)
+            storedCharacter.setMaxHealth(updateCharacterDTO.getMaxHealth());
+        if (updateCharacterDTO.getCurrentHealth() != null)
+            storedCharacter.setCurrentHealth(updateCharacterDTO.getCurrentHealth());
+        if (updateCharacterDTO.getPassiveChance() != null)
+            storedCharacter.setPassiveChance(updateCharacterDTO.getPassiveChance());
+        // ---------- Warrior and Archer ----------
+        if (updateCharacterDTO.getMaxStamina() != null)
+            storedCharacter.setMaxStamina(updateCharacterDTO.getMaxStamina());
+        if (updateCharacterDTO.getCurrentStamina() != null)
+            storedCharacter.setCurrentStamina(updateCharacterDTO.getCurrentStamina());
+        if (updateCharacterDTO.getStrength() != null)
+            storedCharacter.setStrength(updateCharacterDTO.getStrength());
+        if (updateCharacterDTO.getAccuracy() != null)
+            storedCharacter.setAccuracy(updateCharacterDTO.getAccuracy());
+        // ---------- Mage ----------
+        if (updateCharacterDTO.getMaxMana() != null)
+            storedCharacter.setMaxMana(updateCharacterDTO.getMaxMana());
+        if (updateCharacterDTO.getCurrentMana() != null)
+            storedCharacter.setCurrentMana(updateCharacterDTO.getCurrentMana());
+        if (updateCharacterDTO.getIntelligence() != null)
+            storedCharacter.setIntelligence(updateCharacterDTO.getIntelligence());
+
+        log.info("Character updated");
+        return new CharacterDTO(characterRepository.save(storedCharacter));
     }
 
-    @Override
+
+    // -------------------- Delete methods --------------------
     public void deleteCharacter(Long id) {
-
+        log.info("Deleting character with id: {}", id);
+        var storedCharacter = characterRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Character not found"));
+        characterRepository.delete(storedCharacter);
+        log.info("Character deleted");
     }
 
 }
