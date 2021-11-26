@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
@@ -56,7 +57,7 @@ public class CharacterControllerImpl implements CharacterController {
     // -------------------- POST --------------------
     @PostMapping("/create")
     @ResponseStatus(CREATED)
-    public CharacterDTO createCharacter(NewCharacterDTO newCharacterDTO) {
+    public CharacterDTO createCharacter(@RequestBody @Valid NewCharacterDTO newCharacterDTO) {
         log.info("Creating character {} of type {}", newCharacterDTO.getName(), newCharacterDTO.getType());
         return characterService.createCharacter(newCharacterDTO);
     }
@@ -65,7 +66,7 @@ public class CharacterControllerImpl implements CharacterController {
     // -------------------- PUT --------------------
     @PutMapping("/update")
     @ResponseStatus(OK)
-    public CharacterDTO updateCharacter(CharacterDTO updateCharacterDTO) {
+    public CharacterDTO updateCharacter(@RequestBody CharacterDTO updateCharacterDTO) {
         log.info("Updating character {}", updateCharacterDTO.getId());
         try {
             return characterService.updateCharacter(updateCharacterDTO);
