@@ -73,8 +73,10 @@ public class CharacterServiceImpl implements CharacterService {
         var storedCharacter = characterRepository.findById(updateCharacterDTO.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Character not found"));
 
-        if (updateCharacterDTO.getIsAlive() != null)
+        if (updateCharacterDTO.getIsAlive() != null) {
             storedCharacter.setIsAlive(updateCharacterDTO.getIsAlive());
+            if (updateCharacterDTO.getIsAlive()) storedCharacter.setDeathTime(null);
+        }
         if (updateCharacterDTO.getDeathTime() != null)
             storedCharacter.setDeathTime(convertStringToInstant(updateCharacterDTO.getDeathTime()));
         if (updateCharacterDTO.getName() != null)
