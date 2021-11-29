@@ -153,7 +153,8 @@ class CharacterRepositoryTest {
         assertFalse(storedElements.contains(character3));
     }
 
-   @Test @Order(6)
+    @Test
+    @Order(6)
     void testFindByUserUsernameAndIsAlive_invalidUserUsername_returnsEmptyList() {
         var storedElements = characterRepository.findAllByUserUsernameAndIsAlive("invalidUsername", true);
         assertTrue(storedElements.isEmpty());
