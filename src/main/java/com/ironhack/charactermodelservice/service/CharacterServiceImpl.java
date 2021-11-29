@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.ironhack.charactermodelservice.util.InstantConverter.convertStringToInstant;
 import static com.ironhack.charactermodelservice.util.constants.CharacterStatsConstants.*;
+import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +29,7 @@ public class CharacterServiceImpl implements CharacterService {
         var storedCharacters = characterRepository.findAll();
         return storedCharacters.stream().
                 map(CharacterDTO::new).
-                collect(Collectors.toList());
+                collect(toList());
     }
 
     public CharacterDTO getCharacterById(Long id) {
@@ -45,7 +45,7 @@ public class CharacterServiceImpl implements CharacterService {
         var storedCharacters = characterRepository.findAllByUserUsernameAndIsAlive(username, true);
         return storedCharacters.stream().
                 map(CharacterDTO::new).
-                collect(Collectors.toList());
+                collect(toList());
     }
 
     public List<CharacterDTO> getDeadCharactersByUserUsername(String username) {
@@ -53,7 +53,7 @@ public class CharacterServiceImpl implements CharacterService {
         var storedCharacters = characterRepository.findAllByUserUsernameAndIsAlive(username, false);
         return storedCharacters.stream().
                 map(CharacterDTO::new).
-                collect(Collectors.toList());
+                collect(toList());
     }
 
 

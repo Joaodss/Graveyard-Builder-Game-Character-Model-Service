@@ -39,11 +39,9 @@ class CharacterControllerIntegrationTest {
     private final ApplicationContext applicationContext;
     private final WebApplicationContext webApplicationContext;
     private final CharacterRepository characterRepository;
-
-    private MockMvc mockMvc;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final String baseUrl = "/api/v1/characters";
-
+    private MockMvc mockMvc;
     private Character character1;
     private Character character2;
     private Character character3;
