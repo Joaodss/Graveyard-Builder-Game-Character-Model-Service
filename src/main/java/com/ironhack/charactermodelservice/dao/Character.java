@@ -82,7 +82,7 @@ public class Character {
     @Column(name = "current_mana")
     private Integer currentMana;
 
-    @Column(name = "inteligence")
+    @Column(name = "intelligence")
     private Integer intelligence;
 
 
@@ -183,9 +183,9 @@ public class Character {
         this.isAlive = true;
         this.deathTime = null;
         this.name = newCharacterDTO.getName();
-        this.pictureURL = newCharacterDTO.getPictureURL() == null ?
+        this.pictureURL = newCharacterDTO.getPictureURL() != null ?
                 newCharacterDTO.getPictureURL() :
-                DEFAULT_PICTURE_URL;
+                "";
         this.level = BASE_LEVEL;
         this.experience = BASE_EXPERIENCE;
         this.passiveChance = BASE_PASSIVE_CHANCE;

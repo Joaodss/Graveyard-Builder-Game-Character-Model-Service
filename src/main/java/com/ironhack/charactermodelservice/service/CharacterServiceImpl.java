@@ -126,19 +126,28 @@ public class CharacterServiceImpl implements CharacterService {
 
         switch (storedCharacter.getType()) {
             case WARRIOR -> {
-                storedCharacter.setMaxHealth(storedCharacter.getMaxHealth() + INCREASE_VALUE_WARRIOR_HEALTH);
-                storedCharacter.setMaxStamina(storedCharacter.getMaxStamina() + INCREASE_VALUE_WARRIOR_STAMINA);
-                storedCharacter.setStrength(storedCharacter.getStrength() + INCREASE_VALUE_WARRIOR_STRENGTH);
+                storedCharacter.setMaxHealth(storedCharacter.getMaxHealth() +
+                        (INCREASE_VALUE_WARRIOR_HEALTH * levelUpDTO.getHealthPoints()));
+                storedCharacter.setMaxStamina(storedCharacter.getMaxStamina() +
+                        (INCREASE_VALUE_WARRIOR_STAMINA * levelUpDTO.getEnergyPoints()));
+                storedCharacter.setStrength(storedCharacter.getStrength() +
+                        (INCREASE_VALUE_WARRIOR_STRENGTH * levelUpDTO.getAttackPoints()));
             }
             case ARCHER -> {
-                storedCharacter.setMaxHealth(storedCharacter.getMaxHealth() + INCREASE_VALUE_ARCHER_HEALTH);
-                storedCharacter.setMaxStamina(storedCharacter.getMaxStamina() + INCREASE_VALUE_ARCHER_STAMINA);
-                storedCharacter.setAccuracy(storedCharacter.getAccuracy() + INCREASE_VALUE_ARCHER_ACCURACY);
+                storedCharacter.setMaxHealth(storedCharacter.getMaxHealth() +
+                        (INCREASE_VALUE_ARCHER_HEALTH * levelUpDTO.getHealthPoints()));
+                storedCharacter.setMaxStamina(storedCharacter.getMaxStamina() +
+                        (INCREASE_VALUE_ARCHER_STAMINA * levelUpDTO.getEnergyPoints()));
+                storedCharacter.setAccuracy(storedCharacter.getAccuracy() +
+                        (INCREASE_VALUE_ARCHER_ACCURACY * levelUpDTO.getAttackPoints()));
             }
             case MAGE -> {
-                storedCharacter.setMaxHealth(storedCharacter.getMaxHealth() + INCREASE_VALUE_MAGE_HEALTH);
-                storedCharacter.setMaxMana(storedCharacter.getMaxMana() + INCREASE_VALUE_MAGE_MANA);
-                storedCharacter.setIntelligence(storedCharacter.getIntelligence() + INCREASE_VALUE_MAGE_INTELLIGENCE);
+                storedCharacter.setMaxHealth(storedCharacter.getMaxHealth() +
+                        (INCREASE_VALUE_MAGE_HEALTH * levelUpDTO.getHealthPoints()));
+                storedCharacter.setMaxMana(storedCharacter.getMaxMana() +
+                        (INCREASE_VALUE_MAGE_MANA * levelUpDTO.getEnergyPoints()));
+                storedCharacter.setIntelligence(storedCharacter.getIntelligence() +
+                        (INCREASE_VALUE_MAGE_INTELLIGENCE * levelUpDTO.getAttackPoints()));
             }
         }
         storedCharacter.setCurrentHealth(storedCharacter.getMaxHealth());

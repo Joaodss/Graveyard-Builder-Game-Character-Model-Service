@@ -7,8 +7,6 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor(access = PRIVATE)
 public class CharacterStatsConstants {
 
-    public static final String DEFAULT_PICTURE_URL = "";
-
     // Base Character stats
     public static final double BASE_PASSIVE_CHANCE = 0.25;
     public static final long BASE_EXPERIENCE = 0;
